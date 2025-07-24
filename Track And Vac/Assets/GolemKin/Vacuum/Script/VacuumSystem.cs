@@ -63,6 +63,8 @@ namespace GolemKinGames.Vacumn
 
         public void ActivateVacuum()
         {
+            Debug.Log($"Total affectors found: {affectedAffectorsStatus.Count}");
+
             affectedAffectorsStatus.Clear(); // Clear the list before updating
 
             GameObject[] allObjects = FindObjectsOfType<GameObject>();
@@ -195,6 +197,8 @@ namespace GolemKinGames.Vacumn
 
         private void ApplyVacuumForce(VacuumAffector affector)
         {
+            print($"Applying vacuum to: {affector.gameObject.name}");
+
             Vector3 directionToVacuum = vacuumPoint.position - affector.transform.position;
             float distance = directionToVacuum.magnitude;
 
@@ -253,7 +257,8 @@ namespace GolemKinGames.Vacumn
             if (vacuumEffect == VacuumEffect.Shrink)
             {
                 float scale = shrinkCurve.Evaluate(distance / maxRange);
-                affector.transform.localScale = Vector3.one * Mathf.Clamp(scale, 0.1f, 1f);
+                //affector.transform.localScale = Vector3.one * Mathf.Clamp(scale, 0.1f, 1f);
+                affector.transform.localScale *= Mathf.Clamp(scale, 0.1f, 1f);
             }
 
             // Check if the object has reached the vacuum point (collection distance)
