@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: da43478c0aba7b740bc5a07f774d6676
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297861
+  packageName: Vacuum | Object Vacuum/ Object Hoover Framework
+  packageVersion: 1.0
+  assetPath: Assets/GolemKin/Vacuum/Editor/VacuumSystemEditor.cs
+  uploadId: 721179

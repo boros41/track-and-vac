@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a45ee9393c28ff247ba1c896bdca2fd8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297861
+  packageName: Vacuum | Object Vacuum/ Object Hoover Framework
+  packageVersion: 1.0
+  assetPath: Assets/GolemKin/Vacuum/Demo/Material/Background.mat
+  uploadId: 721179

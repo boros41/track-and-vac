@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: d8e8b8d1d3c48cd4c834fdbf43d58f39
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 297861
+  packageName: Vacuum | Object Vacuum/ Object Hoover Framework
+  packageVersion: 1.0
+  assetPath: Assets/GolemKin/Vacuum/Prefab/VacuumItem2D.prefab
+  uploadId: 721179
