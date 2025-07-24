@@ -27,7 +27,8 @@ public class MouseLook : MonoBehaviour
         xRotation -= mouseY; // positive = down, negative = up
         xRotation = Math.Clamp(xRotation, -90f, 60f);
 
+        // TODO: Refactor by referencing camera's Transform. Up/Down rotation needed on the camera because if we rotated the player up/down, the player model would be rotated up/down.
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        _player.Rotate(Vector3.up * mouseX);
+        _player.Rotate(Vector3.up * mouseX); // player rotated about the y-axis for horizontal mouse movement which in turn causes the child camera to follow
     }
 }
