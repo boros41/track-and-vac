@@ -101,6 +101,8 @@ namespace GolemKinGames.Vacumn
 
         public override void OnInspectorGUI()
 {
+    DrawDefaultInspector();
+
     serializedObject.Update();
 
     // Fancy header

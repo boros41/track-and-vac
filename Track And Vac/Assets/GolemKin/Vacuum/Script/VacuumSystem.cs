@@ -41,6 +41,7 @@ namespace GolemKinGames.Vacumn
         [SerializeField] public bool drawGizmos = true;
         [SerializeField] private LayerMask obstacleLayers;
         [SerializeField] private bool velocityAffectsForce = true;
+        [SerializeField] private BatteryBarUI batteryBar;
 
         // Callback for when an object reaches the vacuum point
         public Action<GameObject> OnObjectCollected;
@@ -56,6 +57,8 @@ namespace GolemKinGames.Vacumn
         private float drainSpeed = 4f;
         private void Start()
         {
+            batteryBar.MaxBattery = battery;
+
             if (triggerOnStart)
             {
                 ActivateVacuum();
@@ -123,6 +126,7 @@ namespace GolemKinGames.Vacumn
             if (battery > 0 && isVacuumOn)
             {
                 battery -= drainSpeed * Time.deltaTime;
+                batteryBar.Battery = battery;
                 print($"BATTERY: {battery:F1}");
 
                 if (battery <= 0) DeactivateVacuum();
