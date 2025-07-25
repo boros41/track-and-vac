@@ -51,6 +51,9 @@ namespace GolemKinGames.Vacumn
         private static bool isVacuumOn = false;
         private bool previousState = false;
 
+        private float battery = 100;
+        //private float drainSpeed = 5.0f / 3.0f; // how much is needed to completely drain the battery in 1 minute. ((drainSpeed * deltaTime) * sixtyFrames/oneSec) * sixtySeconds = 100
+        private float drainSpeed = 4f;
         private void Start()
         {
             if (triggerOnStart)
@@ -61,7 +64,7 @@ namespace GolemKinGames.Vacumn
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) && battery > 0)
             {
                 isVacuumOn = !isVacuumOn;
             }
@@ -77,15 +80,13 @@ namespace GolemKinGames.Vacumn
                 }
                 else
                 {
-                    VacuumSoundManager.vacuumSound.Stop();
-                    VacuumSoundManager.vacuumOffSound.Play();
-
-                    EnableGravity();
-                    affectedAffectorsStatus.Clear();
+                    DeactivateVacuum();
                 }
 
                 previousState = isVacuumOn;
             }
+
+            DrainBattery();
 
         }
 
@@ -93,24 +94,54 @@ namespace GolemKinGames.Vacumn
         {
             if (isVacuumOn)
             {
-                ActivateVacuum();
                 UpdateVacuumStatus();
             }
         }
 
-        private void EnableGravity()
+        private void EnableGravity(bool flag)
         {
             foreach (var entry in affectedAffectorsStatus)
             {
                 VacuumAffector affector = entry.Key;
-                affector.GetComponent<Rigidbody>().useGravity = true;
+
+                if (affector == null) continue;
+
+                if (flag)
+                {
+                    affector.GetComponent<Rigidbody>().useGravity = true;
+                }
+                else
+                {
+                    affector.GetComponent<Rigidbody>().useGravity = false;
+                }
 
             }
         }
 
+        private void DrainBattery()
+        {
+            if (battery > 0 && isVacuumOn)
+            {
+                battery -= drainSpeed * Time.deltaTime;
+                print($"BATTERY: {battery:F1}");
+
+                if (battery <= 0) DeactivateVacuum();
+            }
+
+        }
+
+        private void DeactivateVacuum()
+        {
+            VacuumSoundManager.vacuumSound.Stop();
+            VacuumSoundManager.vacuumOffSound.Play();
+
+            EnableGravity(true);
+            affectedAffectorsStatus.Clear();
+        }
+
         public void ActivateVacuum()
         {
-            Debug.Log($"Total affectors found: {affectedAffectorsStatus.Count}");
+            //Debug.Log($"Total affectors found: {affectedAffectorsStatus.Count}");
 
             affectedAffectorsStatus.Clear(); // Clear the list before updating
 
@@ -141,6 +172,9 @@ namespace GolemKinGames.Vacumn
             foreach (var entry in affectedAffectorsStatus)
             {
                 VacuumAffector affector = entry.Key;
+
+                if (affector == null) continue;
+
                 bool wasInFrustum = entry.Value;
                 bool isInFrustumNow = IsWithinFrustum(affector.transform.position);
 
@@ -149,12 +183,15 @@ namespace GolemKinGames.Vacumn
                     // Mark for removal from vacuum effect
                     toRemove.Add(affector);
                     Debug.Log($"Object {affector.gameObject.name} has left the frustum and is no longer vacuumed.");
+
+                    EnableGravity(true);
                 }
                 else if (!wasInFrustum && isInFrustumNow)
                 {
                     // Mark for re-entry into vacuum effect
                     toUpdate.Add(affector);
                     Debug.Log($"Object {affector.gameObject.name} has entered the frustum and is now being vacuumed.");
+                    EnableGravity(false);
                 }
             }
 
@@ -244,6 +281,8 @@ namespace GolemKinGames.Vacumn
 
         private void ApplyVacuumForce(VacuumAffector affector)
         {
+            if (affector == null) return;
+
             print($"Applying vacuum to: {affector.gameObject.name}");
 
             Vector3 directionToVacuum = vacuumPoint.position - affector.transform.position;
@@ -411,6 +450,12 @@ namespace GolemKinGames.Vacumn
             foreach (var entry in affectedAffectorsStatus)
             {
                 VacuumAffector affector = entry.Key;
+
+                if (affector == null || affector.transform == null)
+                {
+                    continue;
+                }
+
                 bool isInFrustum = entry.Value;
 
                 Gizmos.color = isInFrustum ? Color.green : Color.red;
