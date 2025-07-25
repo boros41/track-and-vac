@@ -21,10 +21,14 @@ public class DoorMech : MonoBehaviour
 	{
 		if(col.gameObject.tag == ("Player") && Input.GetKeyDown(KeyCode.E))
 		{
-			if (!doorBool)
+            Debug.Log("Player is in trigger zone");
+            Debug.Log("E pressed");
+            if (!doorBool)
 				doorBool = true;
 			else
 				doorBool = false;
+
+			print(doorBool);
 		}
 	}
 
