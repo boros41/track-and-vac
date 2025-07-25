@@ -48,6 +48,9 @@ namespace GolemKinGames.Vacumn
         // Dictionary to store objects and their frustum status
         private Dictionary<VacuumAffector, bool> affectedAffectorsStatus = new Dictionary<VacuumAffector, bool>();
 
+        private static bool isVacuumOn = false;
+        private bool previousState = false;
+
         private void Start()
         {
             if (triggerOnStart)
@@ -56,9 +59,53 @@ namespace GolemKinGames.Vacumn
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                isVacuumOn = !isVacuumOn;
+            }
+
+            if (isVacuumOn != previousState)
+            {
+                if (isVacuumOn)
+                {
+                    VacuumSoundManager.vacuumOffSound.Stop();
+                    VacuumSoundManager.vacuumSound.Play();
+
+                    ActivateVacuum();
+                }
+                else
+                {
+                    VacuumSoundManager.vacuumSound.Stop();
+                    VacuumSoundManager.vacuumOffSound.Play();
+
+                    EnableGravity();
+                    affectedAffectorsStatus.Clear();
+                }
+
+                previousState = isVacuumOn;
+            }
+
+        }
+
         private void FixedUpdate()
         {
-            UpdateVacuumStatus();
+            if (isVacuumOn)
+            {
+                ActivateVacuum();
+                UpdateVacuumStatus();
+            }
+        }
+
+        private void EnableGravity()
+        {
+            foreach (var entry in affectedAffectorsStatus)
+            {
+                VacuumAffector affector = entry.Key;
+                affector.GetComponent<Rigidbody>().useGravity = true;
+
+            }
         }
 
         public void ActivateVacuum()
@@ -275,6 +322,7 @@ namespace GolemKinGames.Vacumn
             // Decide whether to destroy or deactivate based on the enum
             if (endAction == VacuumObjectEndAction.Destroy)
             {
+                VacuumSoundManager.pickUpSound.Play();
                 Destroy(obj); // Destroy the object
             }
             else if (endAction == VacuumObjectEndAction.Deactivate)
