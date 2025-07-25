@@ -257,8 +257,8 @@ namespace GolemKinGames.Vacumn
             if (vacuumEffect == VacuumEffect.Shrink)
             {
                 float scale = shrinkCurve.Evaluate(distance / maxRange);
-                //affector.transform.localScale = Vector3.one * Mathf.Clamp(scale, 0.1f, 1f);
-                affector.transform.localScale *= Mathf.Clamp(scale, 0.1f, 1f);
+                affector.transform.localScale = Vector3.one * Mathf.Clamp(scale, 0.1f, 1f);
+                //affector.transform.localScale *= Mathf.Clamp(scale, 0.1f, 1f);
             }
 
             // Check if the object has reached the vacuum point (collection distance)
