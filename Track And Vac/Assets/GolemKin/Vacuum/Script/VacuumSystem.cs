@@ -53,10 +53,18 @@ namespace GolemKinGames.Vacumn
         private bool previousState = false;
 
         private float battery = 100;
+
+        public void SetFullBattery()
+        {
+            this.battery = 100;
+        }
+
         //private float drainSpeed = 5.0f / 3.0f; // how much is needed to completely drain the battery in 1 minute. ((drainSpeed * deltaTime) * sixtyFrames/oneSec) * sixtySeconds = 100
         private float drainSpeed = 4f;
         private void Start()
         {
+            CheatCodeManager.SetVacuumInstance(this);
+
             batteryBar.MaxBattery = battery;
 
             if (triggerOnStart)
