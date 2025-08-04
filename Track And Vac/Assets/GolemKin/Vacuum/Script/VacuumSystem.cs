@@ -43,6 +43,7 @@ namespace GolemKinGames.Vacumn
         [SerializeField] private bool velocityAffectsForce = true;
         [SerializeField] private BatteryBarUI batteryBar;
 
+
         // Callback for when an object reaches the vacuum point
         public Action<GameObject> OnObjectCollected;
 
@@ -374,6 +375,9 @@ namespace GolemKinGames.Vacumn
             if (endAction == VacuumObjectEndAction.Destroy)
             {
                 VacuumSoundManager.pickUpSound.Play();
+
+                CleanablesTracker.Instance.Cleanables.Remove(obj);
+
                 Destroy(obj); // Destroy the object
             }
             else if (endAction == VacuumObjectEndAction.Deactivate)
