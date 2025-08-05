@@ -1,12 +1,40 @@
+using System;
+using System.Collections;
 using System.Numerics;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public static PlayerMovement Instance { get; private set; }
     [SerializeField] private CharacterController _controller;
-    [SerializeField] private float _movementSpeed = 2f;
+
+    private float _movementSpeed = 2f;
+    public float MovementSpeed
+    {
+        get => _movementSpeed;
+        set
+        {
+            if (value is <= 0 or > 4)
+            {
+                throw new ArgumentException($"Movement speed out of range [1,4]");
+            }
+
+            _movementSpeed = value;
+        }
+    }
     [SerializeField] private Animator _animator;
     private static readonly int isMovingId = Animator.StringToHash("isMoving");
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        } else if (Instance != this)
+        {
+            Destroy(this);
+        }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         float forwardMovement = Input.GetAxis("Vertical");
 
         // Moves based on the direction the player is facing (altered by MouseLook.cs). Using new Vector3() would move regardless of the player's direction.
-        UnityEngine.Vector3 movement = (transform.right * horizontalMovement + transform.forward * forwardMovement) * (_movementSpeed * Time.deltaTime);
+        UnityEngine.Vector3 movement = (transform.right * horizontalMovement + transform.forward * forwardMovement) * (MovementSpeed * Time.deltaTime);
 
         if (IsMoving(movement))
         {
