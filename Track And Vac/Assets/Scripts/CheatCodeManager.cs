@@ -54,6 +54,13 @@ public class CheatCodeManager : MonoBehaviour
             UpdateRemainingTime(ONE_MINUTE);
         }
 
+        if (IsCleanAllItemsPressed())
+        {
+            print("Cleaning all items cheat pressed.");
+
+            CleanAllItems();
+        }
+
     }
 
     private void UpdateBatteryUI()
@@ -82,6 +89,18 @@ public class CheatCodeManager : MonoBehaviour
         print($"Updating time");
 
         Timer.Instance.RemainingTime += seconds;
+    }
+
+    private static bool IsCleanAllItemsPressed()
+    {
+
+        return Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.X);
+    }
+
+    private static void CleanAllItems()
+    {
+        print("Cleaning all items.");
+        CleanablesTracker.Instance.Cleanables.Clear();
     }
 
 }
