@@ -1,46 +1,66 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
-public class DoorInteraction : MonoBehaviour
+public class DoorInteraction : MonoBehaviour, IInteractable
 {
-    [SerializeField] private float openAngle = 90f;
+    [SerializeField] private TextMeshProUGUI _interactText;
 
-    [SerializeField] private float openSpeed = 2f;
+    public Vector3 OpenRotation, CloseRotation;
 
-    [SerializeField] private bool isOpen = false;
+    public float rotSpeed = 1f;
 
-    private Quaternion _closedRotation;
-
-    private Quaternion _openRotation;
-
-    private Coroutine _currentCoroutine;
+    public bool doorBool;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _closedRotation = transform.rotation;
-        _openRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, openAngle, 0));
+        doorBool = false;
     }
+    /*void OnTriggerStay(Collider col)
+    {
+        if (col.gameObject.tag == ("Player") && Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log("Player is in trigger zone");
+            Debug.Log("E pressed");
+            if (!doorBool)
+                doorBool = true;
+            else
+                doorBool = false;
+
+            print(doorBool);
+        }
+    }*/
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (doorBool)
         {
-            if (_currentCoroutine != null) StopCoroutine(_currentCoroutine);
-            _currentCoroutine = StartCoroutine(ToggleDoor());
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(OpenRotation), rotSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(CloseRotation), rotSpeed * Time.deltaTime);
         }
     }
 
-    private IEnumerator ToggleDoor()
+    public void Interact()
     {
-        Quaternion targetRotation = isOpen ? _closedRotation : _openRotation;
-        isOpen = !isOpen;
-
-        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
+        if (!doorBool)
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * openSpeed);
-            yield return null; 
-        } 
+            doorBool = true;
+            print("Door opened");
+        }
+        else
+        {
+            doorBool = false;
+            print("Door closed");
+        }
+    }
+
+    public string GetDescription()
+    {
+        return "Open Door";
     }
 }
