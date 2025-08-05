@@ -56,6 +56,34 @@ namespace GolemKinGames.Vacumn
 
         private float battery = 100;
 
+        private int _batteriesLeft = 0;
+        private const int MAX_BATTERIES = 3;
+
+        public int BatteriesLeft
+        {
+            get => _batteriesLeft;
+            set
+            {
+                switch (value)
+                {
+                    case < 0:
+                        throw new ArgumentException($"Cannot have negative batteries. Trying to set {value}");
+                    case > MAX_BATTERIES:
+                        print($"Cannot hold more than {MAX_BATTERIES} batteries");
+
+                        _batteriesLeft = MAX_BATTERIES;
+                        break;
+                    default:
+                        _batteriesLeft = value;
+
+                        BatteryBarUI.Instance.SetBatteriesLeftText(BatteriesLeft);
+
+                        break;
+                }
+
+            }
+        }
+
         //private float drainSpeed = 5.0f / 3.0f; // how much is needed to completely drain the battery in 1 minute. ((drainSpeed * deltaTime) * sixtyFrames/oneSec) * sixtySeconds = 100
         private float drainSpeed = 4f;
 
@@ -151,17 +179,36 @@ namespace GolemKinGames.Vacumn
                 print($"BATTERY: {battery:F1}");
 
                 if (battery <= 0) DeactivateVacuum();
+            } else if (battery <= 0 && BatteriesLeft > 0)
+            {
+                isVacuumOn = false; // vacuum now has power again
+                SetFullBattery();
+                BatteryBarUI.Instance.Battery = 100;
             }
 
         }
 
         private void DeactivateVacuum()
         {
-            VacuumSoundManager.vacuumSound.Stop();
-            VacuumSoundManager.vacuumOffSound.Play();
+            if (BatteriesLeft > 0)
+            {
+                print("Consuming battery to charge vacuum");
 
-            EnableGravity(true);
-            affectedAffectorsStatus.Clear();
+                SetFullBattery();
+                BatteriesLeft--;
+
+                BatteryBarUI.Instance.Battery = 100;
+            }
+            else
+            {
+                VacuumSoundManager.vacuumSound.Stop();
+                VacuumSoundManager.vacuumOffSound.Play();
+
+                EnableGravity(true);
+                affectedAffectorsStatus.Clear();
+            }
+
+            
         }
 
         public void ActivateVacuum()

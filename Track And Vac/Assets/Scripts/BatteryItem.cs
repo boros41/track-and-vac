@@ -1,3 +1,4 @@
+using GolemKinGames.Vacumn;
 using TMPro;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ public class BatteryItem : MonoBehaviour, IInteractable
     public void Interact()
     {
         print("Battery collected");
+
+        VacuumSystem.Instance.BatteriesLeft += 1;
 
         Destroy(gameObject);
     }
