@@ -3,20 +3,10 @@ using UnityEngine;
 
 public class CheatCodeManager : MonoBehaviour
 {
-    private static VacuumSystem _vacuum;
     [SerializeField] private BatteryBarUI _batteryBar;
 
     [SerializeField] private static Timer _timer;
 
-    public static void SetVacuumInstance(VacuumSystem vacuum)
-    {
-        _vacuum = vacuum;
-    }
-
-    public static void SetTimerInstance(Timer timer)
-    {
-        _timer = timer;
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,12 +17,9 @@ public class CheatCodeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_vacuum == null) return;
-
-
         if (BatteryCheatPressed())
         {
-            _vacuum.SetFullBattery();
+            VacuumSystem.Instance.SetFullBattery();
             UpdateBatteryUI();
         }
 

@@ -16,6 +16,7 @@ namespace GolemKinGames.Vacumn
     [RequireComponent(typeof(Collider))]
     public class VacuumSystem : MonoBehaviour
     {
+        public static VacuumSystem Instance { get; private set; }
         [SerializeField] private VacuumDimension vacuumDimension = VacuumDimension.Mode3D;  // 2D or 3D mode
         [SerializeField] private LayerMask affectedLayers;
         [SerializeField] private string[] affectedTags;
@@ -55,17 +56,23 @@ namespace GolemKinGames.Vacumn
 
         private float battery = 100;
 
-        public void SetFullBattery()
-        {
-            this.battery = 100;
-        }
-
         //private float drainSpeed = 5.0f / 3.0f; // how much is needed to completely drain the battery in 1 minute. ((drainSpeed * deltaTime) * sixtyFrames/oneSec) * sixtySeconds = 100
         private float drainSpeed = 4f;
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else if (Instance != this)
+            {
+                Destroy(this);
+            }
+        }
+
         private void Start()
         {
-            CheatCodeManager.SetVacuumInstance(this);
-
             batteryBar.MaxBattery = battery;
 
             if (triggerOnStart)
@@ -108,6 +115,11 @@ namespace GolemKinGames.Vacumn
             {
                 UpdateVacuumStatus();
             }
+        }
+
+        public void SetFullBattery()
+        {
+            this.battery = 100;
         }
 
         private void EnableGravity(bool flag)
