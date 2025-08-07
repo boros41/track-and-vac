@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     public static PlayerMovement Instance { get; private set; }
     [SerializeField] private CharacterController _controller;
 
+    private float _stepTimer = 0f;
+    private const float STEP_INTERVAL = .65f;
     private float _movementSpeed = 2f;
     public float MovementSpeed
     {
@@ -58,11 +60,30 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsMoving(movement))
         {
+            _stepTimer -= Time.deltaTime;
+
+            /*if (!SoundManager.SoundToSource[SoundManager.Sound.FOOTSTEP].isPlaying)
+            {
+                SoundManager.SoundToSource[SoundManager.Sound.FOOTSTEP].Play();
+            }*/
+
+            if (_stepTimer <= 0f)
+            {
+                SoundManager.SoundToSource[SoundManager.Sound.FOOTSTEP].Play();
+                _stepTimer = STEP_INTERVAL;
+            }
+
             _controller.Move(movement);
             _animator.SetBool(isMovingId, true);
         }
         else
         {
+            if (SoundManager.SoundToSource[SoundManager.Sound.FOOTSTEP].isPlaying)
+            {
+                SoundManager.SoundToSource[SoundManager.Sound.FOOTSTEP].Stop();
+                _stepTimer = 0f;
+            }
+
             _animator.SetBool(isMovingId, false);
         }
 

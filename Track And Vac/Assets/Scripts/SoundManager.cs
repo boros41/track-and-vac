@@ -10,6 +10,7 @@ public class SoundManager : MonoBehaviour
         BATTERY_PICKUP,
         DOOR_OPEN,
         DOOR_CLOSE,
+        FOOTSTEP,
     }
 
     public static SoundManager Instance { get; private set; }
