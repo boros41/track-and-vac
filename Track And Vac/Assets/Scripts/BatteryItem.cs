@@ -22,6 +22,8 @@ public class BatteryItem : MonoBehaviour, IInteractable
     {
         print("Battery collected");
 
+        //SoundManager.Instance.BatteryPickUpSound.Play();
+        SoundManager.SoundToSource[SoundManager.Sound.BATTERY_PICKUP].Play();
         VacuumSystem.Instance.BatteriesLeft += 1;
 
         Destroy(gameObject);

@@ -50,13 +50,28 @@ public class DoorInteraction : MonoBehaviour, IInteractable
         if (!doorBool)
         {
             doorBool = true;
+
+            SoundManager.SoundToSource[SoundManager.Sound.DOOR_OPEN].Play();
             print("Door opened");
         }
         else
         {
             doorBool = false;
+
+            StartCoroutine(CloseDoorSound());
+
             print("Door closed");
         }
+    }
+
+    private IEnumerator CloseDoorSound()
+    {
+        yield return new WaitUntil(() =>
+            Quaternion.Angle(transform.rotation, Quaternion.Euler(CloseRotation)) < 1f
+        );
+
+        print("Playing close door sfx");
+        SoundManager.SoundToSource[SoundManager.Sound.DOOR_CLOSE].Play();
     }
 
     public string GetDescription()

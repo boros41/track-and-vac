@@ -26,7 +26,8 @@ public class JuiceBoxItem : MonoBehaviour, IInteractable
     public void Interact()
     {
 
-        SoundManager.Instance.SpeedBuffSound.Play();
+        //SoundManager.Instance.SpeedBuffSound.Play();
+        SoundManager.SoundToSource[SoundManager.Sound.SPEED_BUFF_PICKUP].Play();
 
         PlayerMovement.Instance.MovementSpeed = SPEED_BUFF;
         GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().fieldOfView = SPEED_FOV;
