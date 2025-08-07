@@ -87,6 +87,11 @@ public class CheatCodeManager : MonoBehaviour
     private static void CleanAllItems()
     {
         print("Cleaning all items.");
+
+        foreach (GameObject currentGameObject in CleanablesTracker.Instance.Cleanables)
+        {
+            Destroy(currentGameObject);
+        }
         CleanablesTracker.Instance.Cleanables.Clear();
     }
 
