@@ -11,7 +11,7 @@ public class JuiceBoxItem : MonoBehaviour, IInteractable
     private const int DEFAULT_FOV = 60;
     private const int SPEED_FOV = 80;
 
-    private float _duration = 5f;
+    private float _duration = 10f;
     private bool _isBuffActive;
 
     [SerializeField] private Image _background;

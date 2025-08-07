@@ -190,7 +190,7 @@ namespace GolemKinGames.Vacumn
 
         private void DeactivateVacuum()
         {
-            if (BatteriesLeft > 0)
+            if (battery <= 0 && BatteriesLeft > 0)
             {
                 print("Consuming battery to charge vacuum");
 
